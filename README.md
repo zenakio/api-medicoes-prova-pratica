@@ -35,19 +35,34 @@ O sistema recebe valores em graus Celsius, realiza a conversão para Fahrenheit 
 
 ## 4. Instalação e Configuração
 
-Explique aqui como instalar as dependências, configurar o arquivo `.env` e importar o `schema.sql` no MySQL.
+Primeiro, clone o repositório e acesse a pasta do projeto.
 
-Comando para instalar as dependências:
+Instale as dependências:
 
 ```bash
 npm install
 ```
 
-Comando para iniciar o servidor:
+Configure o arquivo `.env` com os dados de conexão do MySQL:
+
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=sua_senha
+DB_NAME=monitoramento_db
+```
+
+Importe o arquivo `schema.sql` no MySQL para criar o banco de dados e a tabela necessária.
+
+Para iniciar o servidor em modo de desenvolvimento:
 
 ```bash
 npm run dev
 ```
+
+A API ficará disponível em:
+
+`http://localhost:3000`
 
 ## 5. Funcionamento da API
 
@@ -83,6 +98,162 @@ As classificações utilizadas são:
 - **404:** Medição não encontrada.
 - **500:** Erro interno do servidor.
 
-## 8. Considerações Finais
+## 8. Exemplos de Testes no Insomnia
 
-Complete esta seção explicando o que você aprendeu durante o desenvolvimento, as dificuldades encontradas e como a API atende ao objetivo do projeto.
+Para testar a API, utilize o Insomnia, selecionando o método HTTP correspondente e configurando o Body como JSON quando necessário.
+
+**URL base:**
+
+`http://localhost:3000`
+
+### 8.1. Cadastrar uma medição (POST)
+
+**Rota:** `POST /medicao`
+
+**Body (JSON):**
+
+```json
+{
+    "descricao": "Temperatura do processador",
+    "tipo": "temperatura",
+    "valor": 85
+}
+```
+
+**Outros exemplos de temperaturas:**
+
+Temperatura ideal:
+
+```json
+{
+    "descricao": "Temperatura ambiente",
+    "tipo": "temperatura",
+    "valor": 25
+}
+```
+
+Temperatura intermediária:
+
+```json
+{
+    "descricao": "Temperatura do equipamento",
+    "tipo": "temperatura",
+    "valor": 90
+}
+```
+
+Temperatura acima do ideal:
+
+```json
+{
+    "descricao": "Temperatura do motor",
+    "tipo": "temperatura",
+    "valor": 100
+}
+```
+
+Limite crítico:
+
+```json
+{
+    "descricao": "Temperatura crítica",
+    "tipo": "temperatura",
+    "valor": 110
+}
+```
+
+### 8.2. Consultar todas as medições (GET)
+
+**Rota:** `GET /medicoes`
+
+Retorna todas as medições cadastradas no banco de dados.
+
+### 8.3. Consultar uma medição específica (GET)
+
+**Rota:** `GET /medicao/1`
+
+Retorna os dados da medição com o ID informado.
+
+### 8.4. Atualizar uma medição (PUT)
+
+**Rota:** `PUT /medicao/1`
+
+**Body (JSON):**
+
+```json
+{
+    "descricao": "Temperatura atualizada",
+    "tipo": "temperatura",
+    "valor": 95
+}
+```
+
+Atualiza os dados da medição correspondente ao ID informado.
+
+### 8.5. Excluir uma medição (DELETE)
+
+**Rota:** `DELETE /medicao/1`
+
+Exclui a medição correspondente ao ID informado.
+
+### 8.6. Testes de validação (POST)
+
+Também é possível testar o tratamento de erros enviando dados inválidos.
+
+**Descrição vazia:**
+
+```json
+{
+    "descricao": "",
+    "tipo": "temperatura",
+    "valor": 85
+}
+```
+
+**Tipo incorreto:**
+
+```json
+{
+    "descricao": "Teste de pressão",
+    "tipo": "pressao",
+    "valor": 85
+}
+```
+
+**Valor enviado como texto:**
+
+```json
+{
+    "descricao": "Teste inválido",
+    "tipo": "temperatura",
+    "valor": "85"
+}
+```
+
+**Temperatura abaixo do zero absoluto:**
+
+```json
+{
+    "descricao": "Temperatura inválida",
+    "tipo": "temperatura",
+    "valor": -300
+}
+```
+
+**JSON vazio:**
+
+```json
+{}
+```
+
+Esses testes devem retornar o código HTTP `400`, indicando que os dados enviados são inválidos.
+
+## 9. Considerações Finais
+
+Durante o desenvolvimento deste projeto, foi possível aprender e praticar conceitos importantes de desenvolvimento Back-end, como a criação de APIs utilizando Node.js e Express, integração com banco de dados MySQL e manipulação de requisições HTTP.
+
+Uma das dificuldades encontradas foi implementar corretamente as operações de cadastro, consulta, atualização e exclusão, além de realizar as validações dos dados recebidos pela API.
+
+Também foi possível trabalhar com conversão de unidades, classificação automática de temperaturas, tratamento de erros e utilização de comandos SQL.
+
+A API atende ao objetivo proposto, permitindo armazenar e gerenciar medições térmicas, converter temperaturas de Celsius para Fahrenheit e identificar automaticamente sua classificação, tornando o monitoramento mais organizado e eficiente.
